@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package user;
+
+service User {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetSession (GetSessionRequest) returns (GetSessionResponse) {}
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+  int32 age = 3;
+
+  message Location {
+    string city = 1;
+    string country = 2;
+  }
+
+  Location location = 4;
+}
+
+message CreateUserResponse {
+  string status = 1;
+  string message = 2;
+  string token = 3;
+}
+
+message GetSessionRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message GetSessionResponse {
+  string status = 1;
+  string message = 2;
+  string token = 3;
+}
