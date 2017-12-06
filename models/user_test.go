@@ -3,6 +3,7 @@ package models_test
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"perScoreAuth/models"
 
@@ -35,15 +36,16 @@ var _ = Describe("User", func() {
 		if userRequestLocationfake != nil {
 			fmt.Println(userRequestLocationfake)
 		}
-		// userRequest.Email = "daya@gmail.com"
+		userRequest.Email = "12"
 		userRequest.Location = &userRequestLocation
 
 		Context("With valid Response", func() {
 			It("when the responds is not nil", func() {
 				response, err := user.CreateInDB(context.Background(), &userRequest, db)
-				fmt.Println("response,", response)
+				data := strings.TrimSpace(response.Message)
+				fmt.Println("response message ::", data)
 				if err != nil {
-					fmt.Println("Error:::", err)
+					fmt.Println("Error", err)
 				}
 				Expect(response).NotTo(BeNil())
 			})

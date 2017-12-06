@@ -11,13 +11,13 @@ message CreateUserRequest {
   string email = 1;
   string password = 2;
   int32 age = 3;
-
+  string role = 4;
   message Location {
     string city = 1;
     string country = 2;
   }
 
-  Location location = 4;
+  Location location = 5;
 }
 
 message CreateUserResponse {
@@ -29,6 +29,7 @@ message CreateUserResponse {
 message GetSessionRequest {
   string email = 1;
   string password = 2;
+  string role = 3;
 }
 
 message GetSessionResponse {
