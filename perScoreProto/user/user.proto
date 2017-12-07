@@ -8,22 +8,32 @@ service User {
 }
 
 message CreateUserRequest {
-  string email = 1;
-  string password = 2;
-  int32 age = 3;
-  string role = 4;
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string password = 4;
+  int32 age = 5;
+  string role = 6;
+  
   message Location {
     string city = 1;
     string country = 2;
   }
 
-  Location location = 5;
+  Location location = 7;
 }
 
 message CreateUserResponse {
   string status = 1;
   string message = 2;
   string token = 3;
+
+  message Field {
+    string name = 1;
+    string validation = 2;
+  }
+
+  repeated Field fields = 4;
 }
 
 message GetSessionRequest {
@@ -36,4 +46,11 @@ message GetSessionResponse {
   string status = 1;
   string message = 2;
   string token = 3;
+
+  message Field {
+    string name = 1;
+    string validation = 2;
+  }
+
+  repeated Field fields = 4;
 }

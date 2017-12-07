@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,6 +19,7 @@ type Server struct {
 }
 
 func (s *Server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	fmt.Println("Request:", in)
 	db, err := gorm.Open("postgres", "host=localhost port=5432 user=perscoreauth dbname=per_score_auth sslmode=disable password=perscoreauth-dm")
 	defer db.Close()
 	models.SetupDatabase(db)
