@@ -18,21 +18,21 @@ import (
 // User ...
 type User struct {
 	gorm.Model
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email" gorm:"unique"`
-	Password  string `json:"password"`
-	Age       int32  `json:"age"`
-	Role      string `json:"role"`
+	FirstName string
+	LastName  string
+	Email     string `gorm:"unique"`
+	Password  string
+	Age       int32
+	Role      string
 	Location  Location
 }
 
 // Location ...
 type Location struct {
 	gorm.Model
-	City    string `json:"city"`
-	Country string `json:"country"`
-	UserID  uint   `json:"userID"`
+	City    string
+	Country string
+	UserID  uint
 }
 
 // CreateInDB ...
