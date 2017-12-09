@@ -82,6 +82,7 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 	return response, err
 }
 
+// Encrypt ...
 func Encrypt(key []byte, text string) string {
 	plaintext := []byte(text)
 
@@ -103,12 +104,6 @@ func Encrypt(key []byte, text string) string {
 	// convert to base64
 	return base64.URLEncoding.EncodeToString(ciphertext)
 }
-
-// func EmailValidate(email string) bool {
-// 	reg := regexp.MustCompile(".+@.+\\..+")
-// 	matched := reg.Match([]byte(email))
-// 	return matched
-// }
 
 // CreateUser ...
 func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserResponse_Field, db *gorm.DB) ([]*pb.CreateUserResponse_Field, error) {
