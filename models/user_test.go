@@ -36,7 +36,7 @@ var _ = Describe("User", func() {
 		if userRequestLocationfake != nil {
 			fmt.Println(userRequestLocationfake)
 		}
-		userRequest.Email = "12"
+		// userRequest.Email = "12"
 		userRequest.Location = &userRequestLocation
 
 		Context("With valid Response", func() {
