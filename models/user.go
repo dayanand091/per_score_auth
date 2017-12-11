@@ -107,12 +107,6 @@ func Encrypt(key []byte, text string) string {
 	return base64.URLEncoding.EncodeToString(ciphertext)
 }
 
-// func EmailValidate(email string) bool {
-// 	reg := regexp.MustCompile(".+@.+\\..+")
-// 	matched := reg.Match([]byte(email))
-// 	return matched
-// }
-
 // CreateUser ...
 func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserResponse_Field, db *gorm.DB) ([]*pb.CreateUserResponse_Field, error) {
 	validate := validator.New()

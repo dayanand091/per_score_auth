@@ -11,6 +11,7 @@ import (
 
 const address = "localhost:6050"
 
+// StartServer ...
 func StartServer() {
 	lis, err := net.Listen("tcp", address)
 	if err != nil {

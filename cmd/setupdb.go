@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"perScoreAuth/models"
 
 	"github.com/jinzhu/gorm"
@@ -30,10 +31,11 @@ var setupdbCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("setupdb called")
-		db, err := gorm.Open("postgres", "host=localhost user=perscoreauth dbname=per_score_auth sslmode=disable password=perscoreauth-dm")
+		dbString := fmt.Sprintf("host=%s dbname=%s user=%s password=%s sslmode=%s", os.Getenv("DEV_HOST"), os.Getenv("DEV_DBNAME"), os.Getenv("DEV_USERNAME"), os.Getenv("DEV_PASSWORD"), os.Getenv("DEV_SSLMODE"))
+		db, err := gorm.Open(os.Getenv("DEV_DB_DRIVER"), dbString)
 		defer db.Close()
 		if err != nil {
-			log.Errorf("Error in setupdatabase: %+v", err)
+			log.Errorf("Error in setup database: %+v", err)
 		}
 		models.SetupDatabase(db)
 	},
