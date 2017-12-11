@@ -9,17 +9,18 @@ import (
 	"google.golang.org/grpc"
 )
 
-const address = "0.0.0.0:6060"
+const address = "localhost:6050"
 
 func StartServer() {
-	fmt.Println("Server Started...")
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	fmt.Println("perScoreAuth server started on :6050 ...")
 
 	// Creates a new gRPC server
 	s := grpc.NewServer()
 	pb.RegisterUserServer(s, &Server{})
 	s.Serve(lis)
+
 }
