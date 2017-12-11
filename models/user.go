@@ -11,8 +11,10 @@ import (
 	"io"
 	pb "perScoreAuth/perScoreProto/user"
 
+	"github.com/chuckpreslar/inflect"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // postgres dialect for gorm
+	"github.com/pinzolo/casee"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -82,6 +84,7 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 	return response, err
 }
 
+// Encrypt ...
 func Encrypt(key []byte, text string) string {
 	plaintext := []byte(text)
 
@@ -128,8 +131,8 @@ func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserRespons
 	if err != nil {
 		for _, errV := range err.(validator.ValidationErrors) {
 			fieldResponse := new(pb.CreateUserResponse_Field)
-			fieldResponse.Name = errV.StructField()
-			fieldResponse.Validation = errV.Tag()
+			fieldResponse.Name = casee.ToSnakeCase(errV.StructField())
+			fieldResponse.Validation = inflect.Titleize(errV.Tag())
 			fieldResponses = append(fieldResponses, fieldResponse)
 			fmt.Println("*** Validation Errors ***")
 			// fmt.Printf("*** Validation Error *** STRUCT: %s, FIELD: %s, VALIDATION: %s ====\n\n",
