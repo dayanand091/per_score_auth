@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io"
 	pb "perScoreAuth/perScoreProto/user"
@@ -18,20 +19,20 @@ import (
 // User ...
 type User struct {
 	gorm.Model
-	FirstName string
-	LastName  string
+	FirstName string `validate:"required"`
+	LastName  string `validate:"required"`
 	Email     string `gorm:"unique"`
-	Password  string
-	Age       int32
-	Role      string
+	Password  string `validate:"required"`
+	Age       int32  `validate:"required"`
+	Role      string `validate:"required"`
 	Location  Location
 }
 
 // Location ...
 type Location struct {
 	gorm.Model
-	City    string
-	Country string
+	City    string `validate:"required"`
+	Country string `validate:"required"`
 	UserID  uint
 }
 
@@ -40,7 +41,7 @@ func (user User) CreateInDB(ctx context.Context, in *pb.CreateUserRequest, db *g
 	var response = new(pb.CreateUserResponse)
 	var fieldResponses []*pb.CreateUserResponse_Field
 
-	_, err := CreateUser(in, fieldResponses, db)
+	fieldResponses, err := CreateUser(in, fieldResponses, db)
 
 	if err != nil {
 		response.Status = "FAILURE"
@@ -58,24 +59,24 @@ func (user User) CreateInDB(ctx context.Context, in *pb.CreateUserRequest, db *g
 
 // CreateSession ...
 func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, db *gorm.DB) (*pb.GetSessionResponse, error) {
+	var err error
 	const key = "fkzfgk0FY2CaYJhyXbshnPJaRrFtCwfj"
+	var sessionInMinutes = "10"
 	var response = new(pb.GetSessionResponse)
-	email := in.Email
-	password := in.Password
-	err := db.Where("Email = ? AND Password = ? ", email, password).First(&user).Error
-	plaintext := email + "," + "10"
+	result := db.Where("email = ? AND password = ?", in.Email, in.Password).First(&user).RecordNotFound()
+	plaintext := user.Email + "," + user.Role + "," + sessionInMinutes
 	byteKey := []byte(key)
 
-	errStr := fmt.Sprintf("%s", err) // To convert into string
-
-	if db.RecordNotFound() {
-		response.Status = "NOT_FOUND"
+	if result == true {
+		response.Status = "FAILURE"
 		response.Token = ""
-		response.Message = errStr
+		response.Message = "Invalid email and password combination!"
+		err = errors.New(response.Message)
 	} else {
 		response.Status = "SUCCESS"
 		response.Token = Encrypt(byteKey, plaintext)
-		response.Message = "Successfully created session"
+		response.Message = "Logged in successfully!"
+		err = nil
 	}
 
 	return response, err
@@ -110,55 +111,49 @@ func Encrypt(key []byte, text string) string {
 // }
 
 // CreateUser ...
-func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserResponse_Field, db *gorm.DB) (User, error) {
+func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserResponse_Field, db *gorm.DB) ([]*pb.CreateUserResponse_Field, error) {
 	validate := validator.New()
-	fieldResponse := new(pb.CreateUserResponse_Field)
 	var user User
-	var location Location
+	user.FirstName = in.FirstName
+	user.LastName = in.LastName
 	user.Email = in.Email
 	user.Password = in.Password
 	user.Age = in.Age
 	user.Role = in.Role
 
+	user.Location.City = in.Location.City
+	user.Location.Country = in.Location.Country
+
 	err := validate.Struct(user)
 	if err != nil {
-		for _, err := range err.(validator.ValidationErrors) {
-			fieldResponse.Name = err.StructField()
-			fieldResponse.Validation = err.Tag()
+		for _, errV := range err.(validator.ValidationErrors) {
+			fieldResponse := new(pb.CreateUserResponse_Field)
+			fieldResponse.Name = errV.StructField()
+			fieldResponse.Validation = errV.Tag()
 			fieldResponses = append(fieldResponses, fieldResponse)
+			fmt.Println("*** Validation Errors ***")
+			// fmt.Printf("*** Validation Error *** STRUCT: %s, FIELD: %s, VALIDATION: %s ====\n\n",
+			// 	errV.Namespace(), errV.StructField(), errV.Tag())
+			fmt.Println("NAMESPACE:", errV.Namespace())
+			fmt.Println("FIELD:", errV.Field())
+			fmt.Println("TAG:", errV.Tag())
+			fmt.Println("TYPE:", errV.Type())
+			fmt.Println("VALUE:", errV.Value())
+			fmt.Println("PARAM:", errV.Param())
 			fmt.Println()
-			fmt.Printf("*** Validation Error *** FIELD: %s, TYPE: %s, VALIDATION: %s ====\n\n",
-				err.StructField(), err.Type(), err.Tag())
 		}
 
-		return user, err
+		fmt.Println("Fields:", fieldResponses)
+
+		return fieldResponses, err
 	}
 
-	location.City = in.Location.City
-	location.Country = in.Location.Country
-
-	err = validate.Struct(location)
-
-	if err != nil {
-		for _, err := range err.(validator.ValidationErrors) {
-			fieldResponse.Name = err.StructField()
-			fieldResponse.Validation = err.Tag()
-			fieldResponses = append(fieldResponses, fieldResponse)
-			fmt.Println()
-			fmt.Printf("*** Validation Error *** FIELD: %s, TYPE: %s, VALIDATION: %s ====\n\n",
-				err.StructField(), err.Type(), err.Tag())
-		}
-
-		return user, err
-	}
+	fmt.Println("Fields:", fieldResponses)
 
 	err = db.Create(&user).Error
 	if err != nil {
-		return user, err
+		return fieldResponses, err
 	}
 
-	location.UserID = user.ID
-	err = db.Create(&location).Error
-
-	return user, err
+	return fieldResponses, err
 }

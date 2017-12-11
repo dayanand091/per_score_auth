@@ -40,7 +40,7 @@ type CreateUserRequest struct {
 	LastName  string                      `protobuf:"bytes,2,opt,name=last_name,json=lastName" json:"last_name,omitempty"`
 	Email     string                      `protobuf:"bytes,3,opt,name=email" json:"email,omitempty"`
 	Password  string                      `protobuf:"bytes,4,opt,name=password" json:"password,omitempty"`
-	Age       int32                       `protobuf:"varint,5,opt,name=age" json:"age,omitempty"`
+	Age       int32                       `protobuf:"varint,5,opt,name=age" json:"age,string,omitempty"`
 	Role      string                      `protobuf:"bytes,6,opt,name=role" json:"role,omitempty"`
 	Location  *CreateUserRequest_Location `protobuf:"bytes,7,opt,name=location" json:"location,omitempty"`
 }
