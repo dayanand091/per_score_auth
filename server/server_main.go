@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const address = "localhost:6050"
+const address = "localhost:6060"
 
 // StartServer ...
 func StartServer() {
@@ -17,7 +17,7 @@ func StartServer() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	fmt.Println("perScoreAuth server started on :6050 ...")
+	fmt.Println("perScoreAuth server started on :6060 ...")
 
 	// Creates a new gRPC server
 	s := grpc.NewServer()
