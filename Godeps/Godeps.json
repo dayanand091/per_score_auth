@@ -4,9 +4,40 @@
 	"GodepVersion": "v79",
 	"Deps": [
 		{
+			"ImportPath": "github.com/chuckpreslar/inflect",
+			"Rev": "423e3ac59c611e2d549527ab8c15fb99335d30ba"
+		},
+		{
+			"ImportPath": "github.com/chuckpreslar/inflect/languages",
+			"Rev": "423e3ac59c611e2d549527ab8c15fb99335d30ba"
+		},
+		{
+			"ImportPath": "github.com/chuckpreslar/inflect/types",
+			"Rev": "423e3ac59c611e2d549527ab8c15fb99335d30ba"
+		},
+		{
+			"ImportPath": "github.com/fatih/camelcase",
+			"Rev": "44e46d280b43ec1531bb25252440e34f1b800b65"
+		},
+		{
 			"ImportPath": "github.com/fsnotify/fsnotify",
 			"Comment": "v1.4.2-6-g4da3e2c",
 			"Rev": "4da3e2cfbabc9f751898f250b49f2439785783a1"
+		},
+		{
+			"ImportPath": "github.com/go-playground/locales",
+			"Comment": "v0.11.2",
+			"Rev": "e4cbcb5d0652150d40ad0646651076b6bd2be4f6"
+		},
+		{
+			"ImportPath": "github.com/go-playground/locales/currency",
+			"Comment": "v0.11.2",
+			"Rev": "e4cbcb5d0652150d40ad0646651076b6bd2be4f6"
+		},
+		{
+			"ImportPath": "github.com/go-playground/universal-translator",
+			"Comment": "v0.16.0-1-g7120149",
+			"Rev": "71201497bace774495daed26a3874fd339e0b538"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
@@ -115,6 +146,10 @@
 			"ImportPath": "github.com/pelletier/go-toml",
 			"Comment": "v1.0.1-10-g4e9e0ee",
 			"Rev": "4e9e0ee19b60b13eb79915933f44d8ed5f268bdd"
+		},
+		{
+			"ImportPath": "github.com/pinzolo/casee",
+			"Rev": "956b6baf666aeb716a38e78d8e69823676048099"
 		},
 		{
 			"ImportPath": "github.com/sirupsen/logrus",
@@ -317,6 +352,11 @@
 			"ImportPath": "google.golang.org/grpc/transport",
 			"Comment": "v1.2.0-331-gde2209a",
 			"Rev": "de2209a968d48e8970546c8a710189f7461370f7"
+		},
+		{
+			"ImportPath": "gopkg.in/go-playground/validator.v9",
+			"Comment": "v9.9.0",
+			"Rev": "61caf9d3038e1af346dbf5c2e16f6678e1548364"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
