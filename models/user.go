@@ -67,7 +67,7 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 	const key = "fkzfgk0FY2CaYJhyXbshnPJaRrFtCwfj"
 	var sessionInMinutes = "10"
 	var response = new(pb.GetSessionResponse)
-	result := db.Where("email = ? AND password = ?", in.Email, in.Password).First(&user).RecordNotFound()
+	result := db.Where("email = ? AND password = ?", in.Email, Encrypt(in.Password)).First(&user).RecordNotFound()
 	plaintext := user.Email + "," + user.Role + "," + sessionInMinutes
 	// byteKey := []byte(key)
 
