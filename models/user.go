@@ -67,9 +67,11 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 	const key = "fkzfgk0FY2CaYJhyXbshnPJaRrFtCwfj"
 	var sessionInMinutes = "10"
 	var response = new(pb.GetSessionResponse)
-	result := db.Where("email = ? AND password = ?", in.Email, Encrypt(in.Password)).First(&user).RecordNotFound()
+	result := db.Where("email = ? ", in.Email).First(&user).RecordNotFound()
+	if in.Password == Decrypt(user.Password) {
+		result = false
+	}
 	plaintext := user.Email + "," + user.Role + "," + sessionInMinutes
-	// byteKey := []byte(key)
 
 	if result == true {
 		response.Status = "FAILURE"
@@ -156,4 +158,29 @@ func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserRespons
 	}
 
 	return fieldResponses, err
+}
+
+// Decrypt ...
+func Decrypt(cryptoText string) string {
+	key := []byte(Key)
+	ciphertext, _ := base64.URLEncoding.DecodeString(cryptoText)
+
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+	if len(ciphertext) < aes.BlockSize {
+		panic("ciphertext too short")
+	}
+	iv := ciphertext[:aes.BlockSize]
+	dataByte := ciphertext[aes.BlockSize:]
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+
+	// XORKeyStream can work in-place if the two arguments are the same.
+	stream.XORKeyStream(ciphertext, ciphertext)
+
+	dataArray := fmt.Sprintf("%s", dataByte)
+
+	return dataArray
 }

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const address = "localhost:6060"
+const address = "localhost:6050"
 
 // StartServer ...
 func StartServer() {
