@@ -68,9 +68,12 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 	var sessionInMinutes = "10"
 	var response = new(pb.GetSessionResponse)
 	result := db.Where("email = ? ", in.Email).First(&user).RecordNotFound()
-	if in.Password == Decrypt(user.Password) {
-		result = false
+	if result == false {
+		if in.Password == Decrypt(user.Password) {
+			result = false
+		}
 	}
+
 	plaintext := user.Email + "," + user.Role + "," + sessionInMinutes
 
 	if result == true {
@@ -84,7 +87,6 @@ func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, d
 		response.Message = "Logged in successfully!"
 		err = nil
 	}
-
 	return response, err
 }
 
