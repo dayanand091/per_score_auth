@@ -129,8 +129,6 @@ func CreateUser(in *pb.CreateUserRequest, fieldResponses []*pb.CreateUserRespons
 			fieldResponse.Validation = inflect.Titleize(errV.Tag())
 			fieldResponses = append(fieldResponses, fieldResponse)
 			fmt.Println("*** Validation Errors ***")
-			// fmt.Printf("*** Validation Error *** STRUCT: %s, FIELD: %s, VALIDATION: %s ====\n\n",
-			// 	errV.Namespace(), errV.StructField(), errV.Tag())
 			fmt.Println("NAMESPACE:", errV.Namespace())
 			fmt.Println("FIELD:", errV.Field())
 			fmt.Println("TAG:", errV.Tag())
