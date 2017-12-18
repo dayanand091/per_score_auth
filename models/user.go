@@ -18,6 +18,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
+// Key ...
 const Key = "fkzfgk0FY2CaYJhyXbshnPJaRrFtCwfj"
 
 // User ...
@@ -64,13 +65,14 @@ func (user User) CreateInDB(ctx context.Context, in *pb.CreateUserRequest, db *g
 // CreateSession ...
 func (user User) CreateSession(sctx context.Context, in *pb.GetSessionRequest, db *gorm.DB) (*pb.GetSessionResponse, error) {
 	var err error
-	const key = "fkzfgk0FY2CaYJhyXbshnPJaRrFtCwfj"
 	var sessionInMinutes = "10"
 	var response = new(pb.GetSessionResponse)
 	result := db.Where("email = ? ", in.Email).First(&user).RecordNotFound()
 	if result == false {
 		if in.Password == Decrypt(user.Password) {
 			result = false
+		} else {
+			result = true
 		}
 	}
 
